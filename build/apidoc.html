@@ -61,12 +61,129 @@
 
     <li class="apidocModuleLi"><a href="#apidoc.module.gulp-size">module gulp-size</a><ol>
 
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-size.gulp-size">
+            function <span class="apidocSignatureSpan"></span>gulp-size
+            <span class="apidocSignatureSpan">(opts)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-size.toString">
+            function <span class="apidocSignatureSpan">gulp-size.</span>toString
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
     </ol></li>
 
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.gulp-size" id="apidoc.module.gulp-size">module gulp-size</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-size.gulp-size" id="apidoc.element.gulp-size.gulp-size">
+        function <span class="apidocSignatureSpan"></span>gulp-size
+        <span class="apidocSignatureSpan">(opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">gulp-size = function (opts) {
+	opts = objectAssign({
+		pretty: true,
+		showTotal: true
+	}, opts);
+
+	var totalSize = 0;
+	var fileCount = 0;
+
+	function log(what, size) {
+		var title = opts.title;
+		title = title ? chalk.cyan(title) + &#x27; &#x27; : &#x27;&#x27;;
+		size = opts.pretty ? prettyBytes(size) : (size + &#x27; B&#x27;);
+		gutil.log(title + what + &#x27; &#x27; + chalk.magenta(size) + (opts.gzip ? chalk.gray(&#x27; (gzipped)&#x27;) : &#x27;&#x27;));
+	}
+
+	return through.obj(function (file, enc, cb) {
+		if (file.isNull()) {
+			cb(null, file);
+			return;
+		}
+
+		var finish = function (err, size) {
+			if (err) {
+				cb(new gutil.PluginError(&#x27;gulp-size&#x27;, err));
+				return;
+			}
+
+			totalSize += size;
+
+			if (opts.showFiles === true &#x26;&#x26; size &#x3e; 0) {
+				log(chalk.blue(file.relative), size);
+			}
+
+			fileCount++;
+			cb(null, file);
+		};
+
+		if (file.isStream()) {
+			if (opts.gzip) {
+				file.contents.pipe(gzipSize.stream())
+					.on(&#x27;error&#x27;, finish)
+					.on(&#x27;end&#x27;, function () {
+						finish(null, this.gzipSize);
+					});
+			} else {
+				file.contents.pipe(new StreamCounter())
+					.on(&#x27;error&#x27;, finish)
+					.on(&#x27;finish&#x27;, function () {
+						finish(null, this.bytes);
+					});
+			}
+
+			return;
+		}
+
+		if (opts.gzip) {
+			gzipSize(file.contents, finish);
+		} else {
+			finish(null, file.contents.length);
+		}
+	}, function (cb) {
+		this.size = totalSize;
+		this.prettySize = prettyBytes(totalSize);
+
+		if (!(fileCount === 1 &#x26;&#x26; opts.showFiles) &#x26;&#x26; totalSize &#x3e; 0 &#x26;&#x26; fileCount &#x3e; 0 &#x26;&#x26; opts.showTotal) {
+			log(chalk.green(&#x27;all files&#x27;), totalSize);
+		}
+
+		cb();
+	});
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-size.toString" id="apidoc.element.gulp-size.toString">
+        function <span class="apidocSignatureSpan">gulp-size.</span>toString
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">toString = function () {
+    return toString;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 </div>
 
