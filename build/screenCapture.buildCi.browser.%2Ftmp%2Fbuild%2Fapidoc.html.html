@@ -1,4 +1,4 @@
-<div class="apidocDiv">
+<html><head></head><body><div class="apidocDiv">
 <style>
 /*csslint
 */
@@ -47,15 +47,10 @@
 }
 </style>
 <h1>api documentation for
-    <a
-
-    >gulp-size (v2.1.0)</a>
+    <a>gulp-size (v2.1.0)</a>
 </h1>
 <h4>Display the size of your project</h4>
-<div class="apidocSectionDiv"><a
-    href="#apidoc.tableOfContents"
-    id="apidoc.tableOfContents"
-><h1>table of contents</h1></a><ol>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
 
     <li class="apidocModuleLi"><a href="#apidoc.module.gulp-size">module gulp-size</a><ol>
 
@@ -94,9 +89,9 @@
 
 	function log(what, size) {
 		var title = opts.title;
-		title = title ? chalk.cyan(title) + &#x27; &#x27; : &#x27;&#x27;;
-		size = opts.pretty ? prettyBytes(size) : (size + &#x27; B&#x27;);
-		gutil.log(title + what + &#x27; &#x27; + chalk.magenta(size) + (opts.gzip ? chalk.gray(&#x27; (gzipped)&#x27;) : &#x27;&#x27;));
+		title = title ? chalk.cyan(title) + ' ' : '';
+		size = opts.pretty ? prettyBytes(size) : (size + ' B');
+		gutil.log(title + what + ' ' + chalk.magenta(size) + (opts.gzip ? chalk.gray(' (gzipped)') : ''));
 	}
 
 	return through.obj(function (file, enc, cb) {
@@ -107,13 +102,13 @@
 
 		var finish = function (err, size) {
 			if (err) {
-				cb(new gutil.PluginError(&#x27;gulp-size&#x27;, err));
+				cb(new gutil.PluginError('gulp-size', err));
 				return;
 			}
 
 			totalSize += size;
 
-			if (opts.showFiles === true &#x26;&#x26; size &#x3e; 0) {
+			if (opts.showFiles === true &amp;&amp; size &gt; 0) {
 				log(chalk.blue(file.relative), size);
 			}
 
@@ -124,14 +119,14 @@
 		if (file.isStream()) {
 			if (opts.gzip) {
 				file.contents.pipe(gzipSize.stream())
-					.on(&#x27;error&#x27;, finish)
-					.on(&#x27;end&#x27;, function () {
+					.on('error', finish)
+					.on('end', function () {
 						finish(null, this.gzipSize);
 					});
 			} else {
 				file.contents.pipe(new StreamCounter())
-					.on(&#x27;error&#x27;, finish)
-					.on(&#x27;finish&#x27;, function () {
+					.on('error', finish)
+					.on('finish', function () {
 						finish(null, this.bytes);
 					});
 			}
@@ -148,8 +143,8 @@
 		this.size = totalSize;
 		this.prettySize = prettyBytes(totalSize);
 
-		if (!(fileCount === 1 &#x26;&#x26; opts.showFiles) &#x26;&#x26; totalSize &#x3e; 0 &#x26;&#x26; fileCount &#x3e; 0 &#x26;&#x26; opts.showTotal) {
-			log(chalk.green(&#x27;all files&#x27;), totalSize);
+		if (!(fileCount === 1 &amp;&amp; opts.showFiles) &amp;&amp; totalSize &gt; 0 &amp;&amp; fileCount &gt; 0 &amp;&amp; opts.showTotal) {
+			log(chalk.green('all files'), totalSize);
 		}
 
 		cb();
@@ -167,3 +162,4 @@
     ]
 </div>
 </div>
+</body></html>
